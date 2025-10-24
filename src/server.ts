@@ -6,6 +6,8 @@ import { appErrorHandler, genericErrorHandler } from './middlewares/error.middle
 import logger from './config/logger.config';
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import { setUpEmailWorker } from './producer/email.producer';
+import { NotificationDTO } from './dto/notification.dto';
+import { addEmailToQueue } from './publisher/email.publisher';
 // import { NotificationDTO } from './dto/notification.dto';
 // import { addEmailToQueue } from './publisher/email.publisher';
 const app = express();
@@ -33,14 +35,13 @@ app.listen(serverConfig.PORT, () => {
     logger.info(`Server is running on http://localhost:${serverConfig.PORT}`);
     logger.info(`Press Ctrl+C to stop the server.`);
     setUpEmailWorker();
-    // const sampleNotification:NotificationDTO={
-    //     to:'sample',
-    //     subject:'aksndak',
-    //     templateId:'akjsndkansda',
-    //     params:{
-    //         name:'ksandkad',
-    //         kasndka:'qinskldnaksndwkqdssadwawqwq'
-    //     }
-    // }
-    // addEmailToQueue(sampleNotification);
+    const sampleNotification:NotificationDTO={
+        to:'assis.mohanty.98@gmail.com',
+        subject:'aksndak',
+        templateId:'email.mailer',
+        params:{
+            kasndka:'qinskldnaksndwkqdssadwawqwq'
+        }
+    }
+    addEmailToQueue(sampleNotification);
 });

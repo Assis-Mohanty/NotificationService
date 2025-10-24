@@ -3,6 +3,9 @@ import { theQueue } from "../queue/queue";
 import { PAYLOAD } from "../publisher/email.publisher";
 import { NotificationDTO } from "../dto/notification.dto";
 import { getRedisConnection } from "../config/redis.config";
+import { converHBStoString } from "../template/template";
+import { sendEmail } from "../service/mailer.service";
+import logger from "../config/logger.config";
 
 export const setUpEmailWorker=()=>{
 const emailWorker= new Worker<NotificationDTO>(theQueue,async(job:Job)=>{
@@ -11,6 +14,9 @@ if(job.name!==PAYLOAD){
     }
     const jobData=job.data
     console.log(jobData)
+    const emailContent=await converHBStoString(jobData.templateId,jobData.params)
+    await sendEmail(jobData.to,jobData.subject,emailContent);
+    logger.info(`Email has been sent succesfully with booking${ jobData.templateId}`)
 },
 {
     connection:getRedisConnection()
